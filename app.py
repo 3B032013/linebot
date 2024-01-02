@@ -46,7 +46,7 @@ def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
         # Add this line to log the ThingSpeak API response
         logging.debug(f"ThingSpeak API Response: {data}")
 
-        values = [entry.get(f'field{field_name[-1]}') for entry in data.get('feeds', [])]
+        values = [entry.get(field_name) for entry in data.get('feeds', [])]
         return values
     except Exception as e:
         logging.error(f"Error fetching data from ThingSpeak: {e}")
