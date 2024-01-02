@@ -35,12 +35,13 @@ handler = WebhookHandler('3650d1fdf0030008e78b4026747858d5')
 
 def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
     try:
-        # Modify the ThingSpeak API URL to specify the field
         thingspeak_api_url = f'https://api.thingspeak.com/channels/{channel_id}/feeds.json?api_key={api_key}&results={results}'
         response = requests.get(thingspeak_api_url)
         data = response.json()
 
-        # Extract relevant data from the response
+        # Add this line to print the ThingSpeak API response
+        print(f"ThingSpeak API Response: {data}")
+
         values = [entry.get(f'field{field_name[-1]}') for entry in data.get('feeds', [])]
         return values
     except Exception as e:
