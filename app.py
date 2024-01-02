@@ -40,11 +40,10 @@ def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
         data = response.json()
 
         # Add this line to print the ThingSpeak API response
-        print(f"ThingSpeak API Response: {data}")
+#         print(f"ThingSpeak API Response: {data}")
 
         values = [entry.get(f'field{field_name[-1]}') for entry in data.get('feeds', [])]
-#         return values
-        return 50
+        return values
     except Exception as e:
         print(f"Error fetching data from ThingSpeak: {e}")
         return '123'
