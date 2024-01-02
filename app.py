@@ -34,7 +34,7 @@ handler = WebhookHandler('3650d1fdf0030008e78b4026747858d5')
 def fetch_thingspeak_data(field_name):
     try:
         # Modify the ThingSpeak API URL to specify the field
-        thingspeak_api_url = f'https://api.thingspeak.com/channels/2384494/fields/1.json?api_key=EJU2GGIUNTGCOV4S&results=2'
+        thingspeak_api_url = f'https://api.thingspeak.com/channels/2384494/feeds.json?api_key=EJU2GGIUNTGCOV4S&results=2'
         response = requests.get(thingspeak_api_url)
         data = response.json()
         # Extract relevant data from the response (modify this based on your ThingSpeak channel structure)
