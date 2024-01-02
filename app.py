@@ -8,6 +8,9 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 
+import json
+from linebot.models import TextSendMessage
+
 
 #======這裡是呼叫的檔案內容=====
 from message import *
@@ -28,6 +31,18 @@ line_bot_api = LineBotApi('KbpSLEW/T1ETFs903NTolbNGYhuX4h+nwyQuIA1u9FYoIJvJX53CP
 # Channel Secret
 handler = WebhookHandler('3650d1fdf0030008e78b4026747858d5')
 
+def fetch_thingspeak_data(field_name):
+    try:
+        # Modify the ThingSpeak API URL to specify the field
+        thingspeak_api_url = f'https://api.thingspeak.com/channels/2384494/fields/1.json?api_key=EJU2GGIUNTGCOV4S&results=2'
+        response = requests.get(thingspeak_api_url)
+        data = response.json()
+        # Extract relevant data from the response (modify this based on your ThingSpeak channel structure)
+        value = data['feeds'][0]['field' + field_name[-1]]
+        return value
+    except Exception as e:
+        print(f"Error fetching data from ThingSpeak: {e}")
+        return None
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
@@ -66,6 +81,24 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, message)
     elif '功能列表' in msg:
         message = function_list()
+        line_bot_api.reply_message(event.reply_token, message)
+    elif '溫度' in msg:
+        # Fetch temperature from ThingSpeak
+        temperature = fetch_thingspeak_data('temperature')
+        if temperature is not None:
+            # Respond with the temperature value
+            message = TextSendMessage(text=f'目前溫度：{temperature} °C')
+        else:
+            message = TextSendMessage(text='無法取得溫度資訊')
+        line_bot_api.reply_message(event.reply_token, message)
+    elif '氣體' in msg:
+        # Fetch smoke data from ThingSpeak
+        smoke = fetch_thingspeak_data('smoke')
+        if smoke is not None:
+            # Respond with the smoke value
+            message = TextSendMessage(text=f'目前氣體濃度：{smoke}')
+        else:
+            message = TextSendMessage(text='無法取得氣體濃度資訊')
         line_bot_api.reply_message(event.reply_token, message)
     else:
         message = TextSendMessage(text=msg)
