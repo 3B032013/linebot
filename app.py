@@ -1,5 +1,3 @@
-import json
-import requests
 from flask import Flask, request, abort
 
 from linebot import (
@@ -11,6 +9,9 @@ from linebot.exceptions import (
 from linebot.models import *
 
 from linebot.models import TextSendMessage
+
+import json
+import requests
 
 
 #======這裡是呼叫的檔案內容=====
@@ -44,10 +45,7 @@ def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
         return values
     except Exception as e:
         print(f"Error fetching data from ThingSpeak: {e}")
-        values = 'failed'
-        print(f"Exception details: {e}")
-        print(f"ThingSpeak response: {data}")
-        return values
+        return None
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
