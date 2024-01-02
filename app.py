@@ -44,6 +44,8 @@ def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
     except Exception as e:
         print(f"Error fetching data from ThingSpeak: {e}")
         values = 'failed'
+        print(f"Exception details: {e}")
+        print(f"ThingSpeak response: {data}")
         return values
 
 # 監聽所有來自 /callback 的 Post Request
