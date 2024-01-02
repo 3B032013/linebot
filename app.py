@@ -12,7 +12,11 @@ from linebot.models import TextSendMessage
 
 import json
 import requests
+import logging
 
+# 設定 log 檔案的名稱和格式
+log_filename = 'app.log'
+logging.basicConfig(filename=log_filename, level=logging.DEBUG)
 
 #======這裡是呼叫的檔案內容=====
 from message import *
@@ -39,14 +43,14 @@ def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
         response = requests.get(thingspeak_api_url)
         data = response.json()
 
-        # Add this line to print the ThingSpeak API response
-#         print(f"ThingSpeak API Response: {data}")
+        # Add this line to log the ThingSpeak API response
+        logging.debug(f"ThingSpeak API Response: {data}")
 
         values = [entry.get(f'field{field_name[-1]}') for entry in data.get('feeds', [])]
         return values
     except Exception as e:
-        print(f"Error fetching data from ThingSpeak: {e}")
-        return '123'
+        logging.error(f"Error fetching data from ThingSpeak: {e}")
+        return None
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
