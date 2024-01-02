@@ -46,7 +46,7 @@ def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
         return values
     except Exception as e:
         print(f"Error fetching data from ThingSpeak: {e}")
-        return None
+        return '123'
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
