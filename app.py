@@ -31,15 +31,16 @@ line_bot_api = LineBotApi('KbpSLEW/T1ETFs903NTolbNGYhuX4h+nwyQuIA1u9FYoIJvJX53CP
 # Channel Secret
 handler = WebhookHandler('3650d1fdf0030008e78b4026747858d5')
 
-def fetch_thingspeak_data(field_name):
+def fetch_thingspeak_data(channel_id, api_key, field_name, results=2):
     try:
         # Modify the ThingSpeak API URL to specify the field
-        thingspeak_api_url = f'https://api.thingspeak.com/channels/2384494/feeds.json?api_key=EJU2GGIUNTGCOV4S&results=2'
+        thingspeak_api_url = f'https://api.thingspeak.com/channels/{channel_id}/feeds.json?api_key={api_key}&results={results}'
         response = requests.get(thingspeak_api_url)
         data = response.json()
-        # Extract relevant data from the response (modify this based on your ThingSpeak channel structure)
-        value = data['feeds'][0]['field' + field_name[-1]]
-        return value
+
+        # Extract relevant data from the response
+        values = [entry.get(f'field{field_name[-1]}') for entry in data.get('feeds', [])]
+        return values
     except Exception as e:
         print(f"Error fetching data from ThingSpeak: {e}")
         return None
@@ -84,19 +85,19 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, message)
     elif '溫度' in msg:
         # Fetch temperature from ThingSpeak
-        temperature = fetch_thingspeak_data('temperature')
-        if temperature is not None:
-            # Respond with the temperature value
-            message = TextSendMessage(text=f'目前溫度：{temperature} °C')
+        temperatures = fetch_thingspeak_data(channel_id, api_key, 'temperature')
+        if temperatures:
+            # Respond with the latest temperature values
+            message = TextSendMessage(text=f'最新溫度值：{", ".join(map(str, temperatures))} °C')
         else:
             message = TextSendMessage(text='無法取得溫度資訊')
         line_bot_api.reply_message(event.reply_token, message)
     elif '氣體' in msg:
         # Fetch smoke data from ThingSpeak
-        smoke = fetch_thingspeak_data('smoke')
-        if smoke is not None:
-            # Respond with the smoke value
-            message = TextSendMessage(text=f'目前氣體濃度：{smoke}')
+        smokes = fetch_thingspeak_data(channel_id, api_key, 'smoke')
+        if smokes:
+            # Respond with the latest smoke values
+            message = TextSendMessage(text=f'最新氣體濃度：{", ".join(map(str, smokes))}')
         else:
             message = TextSendMessage(text='無法取得氣體濃度資訊')
         line_bot_api.reply_message(event.reply_token, message)
