@@ -1,3 +1,5 @@
+import json
+import requests
 from flask import Flask, request, abort
 
 from linebot import (
@@ -8,7 +10,6 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 
-import json
 from linebot.models import TextSendMessage
 
 
