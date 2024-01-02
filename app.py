@@ -40,8 +40,7 @@ def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
 
         # Extract relevant data from the response
         values = [entry.get(f'field{field_name[-1]}') for entry in data.get('feeds', [])]
-#         return values
-        return thingspeak_api_url
+        return values
     except Exception as e:
         print(f"Error fetching data from ThingSpeak: {e}")
         values = '沒有連接ThingSpeak'
