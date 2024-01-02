@@ -99,7 +99,7 @@ def handle_message(event):
         if temperatures:
             # Respond with the latest temperature values
 #             message = TextSendMessage(text=f'最新溫度值：{", ".join(map(str, temperatures))} °C')
-            message = temperatures
+            message = TextSendMessage(temperatures)
         else:
             message = TextSendMessage(text='無法取得溫度資訊')
         line_bot_api.reply_message(event.reply_token, message)
