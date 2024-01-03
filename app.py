@@ -37,7 +37,7 @@ line_bot_api = LineBotApi('KbpSLEW/T1ETFs903NTolbNGYhuX4h+nwyQuIA1u9FYoIJvJX53CP
 # Channel Secret
 handler = WebhookHandler('3650d1fdf0030008e78b4026747858d5')
 
-def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
+def fetch_thingspeak_data(channel_id, api_key, field_name, results=3):
     try:
         thingspeak_api_url = f'https://api.thingspeak.com/channels/{channel_id}/feeds.json?api_key={api_key}&results={results}'
         response = requests.get(thingspeak_api_url)
