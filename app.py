@@ -95,17 +95,16 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, message)
     elif '溫度' in msg:
         # Fetch temperature from ThingSpeak
-        temperatures = fetch_thingspeak_data(channel_id, api_key, 'temperature')
+        temperatures = fetch_thingspeak_data(channel_id, api_key, 'field1')
         if temperatures:
             # Respond with the latest temperature values
-#             message = TextSendMessage(text=f'最新溫度值：{", ".join(map(str, temperatures))} °C')
-            message = TextSendMessage(temperatures)
+            message = TextSendMessage(text=f'最新溫度值：{", ".join(map(str, temperatures))} °C')
         else:
             message = TextSendMessage(text='無法取得溫度資訊')
         line_bot_api.reply_message(event.reply_token, message)
     elif '氣體' in msg:
         # Fetch smoke data from ThingSpeak
-        smokes = fetch_thingspeak_data(channel_id, api_key, 'smoke')
+        smokes = fetch_thingspeak_data(channel_id, api_key, 'field2')
         if smokes:
             # Respond with the latest smoke values
             message = TextSendMessage(text=f'最新氣體濃度：{", ".join(map(str, smokes))}')
