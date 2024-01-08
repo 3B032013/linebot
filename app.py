@@ -37,7 +37,6 @@ def fetch_thingspeak_data(channel_id, api_key, field_name, results=1):
         response = requests.get(thingspeak_api_url)
         data = response.json()
 
-        # Add this line to log the ThingSpeak API response
         logging.debug(f"ThingSpeak API Response: {data}")
 
         values = [entry.get(field_name) for entry in data.get('feeds', [])]
@@ -69,39 +68,19 @@ def handle_message(event):
     msg = event.message.text
     channel_id = '2384494'
     api_key = 'EJU2GGIUNTGCOV4S'
-#     if '最新合作廠商' in msg:
-#         message = imagemap_message()
-#         line_bot_api.reply_message(event.reply_token, message)
-#     elif '最新活動訊息' in msg:
-#         message = buttons_message()
-#         line_bot_api.reply_message(event.reply_token, message)
-#     elif '註冊會員' in msg:
-#         message = Confirm_Template()
-#         line_bot_api.reply_message(event.reply_token, message)
-#     elif '旋轉木馬' in msg:
-#         message = Carousel_Template()
-#         line_bot_api.reply_message(event.reply_token, message)
-#     elif '圖片畫廊' in msg:
-#         message = test()
-#         line_bot_api.reply_message(event.reply_token, message)
-#     elif '功能列表' in msg:
-#         message = function_list()
-#         line_bot_api.reply_message(event.reply_token, message)
     if '溫度' in msg:
-        # Fetch temperature from ThingSpeak
+        # 取得thingspeak上的溫度值
         temperatures = fetch_thingspeak_data(channel_id, api_key, 'field1')
         if temperatures:
-            # Respond with the latest temperature values
-            message = TextSendMessage(text=f'最新溫度值：{", ".join(map(str, temperatures))} °C')
+            message = TextSendMessage(text=f'目前溫度：{", ".join(map(str, temperatures))} °C')
         else:
             message = TextSendMessage(text='無法取得溫度資訊')
         line_bot_api.reply_message(event.reply_token, message)
     elif '氣體' in msg:
-        # Fetch smoke data from ThingSpeak
+        # 取得thingspeak上的煙霧值
         smokes = fetch_thingspeak_data(channel_id, api_key, 'field2')
         if smokes:
-            # Respond with the latest smoke values
-            message = TextSendMessage(text=f'最新氣體濃度：{", ".join(map(str, smokes))}')
+            message = TextSendMessage(text=f'目前氣體濃度：{", ".join(map(str, smokes))}')
         else:
             message = TextSendMessage(text='無法取得氣體濃度資訊')
         line_bot_api.reply_message(event.reply_token, message)
